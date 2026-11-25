@@ -1,0 +1,748 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>AquaWatch - Water Quality Monitoring</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #071b2b;
+    color: #e5faff;
+}
+
+header {
+    padding: 22px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0b2639;
+    border-bottom: 1px solid #16445a;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    color: #42e8dc;
+}
+
+.logo span {
+    color: white;
+}
+
+.live {
+    color: #49e6a5;
+    font-size: 13px;
+}
+
+.hero {
+    padding: 45px 7%;
+    background: linear-gradient(120deg, #0b354c, #087e85);
+}
+
+.hero h1 {
+    font-size: 35px;
+    margin-bottom: 12px;
+}
+
+.hero p {
+    color: #d1f5f4;
+    line-height: 1.7;
+}
+
+.hero .tag {
+    display: inline-block;
+    margin-top: 18px;
+    background: #ffffff20;
+    padding: 9px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.container {
+    padding: 30px 7%;
+}
+
+.section-title {
+    margin: 25px 0 18px;
+    font-size: 21px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 17px;
+}
+
+.card {
+    background: #102e41;
+    border: 1px solid #205064;
+    border-radius: 15px;
+    padding: 22px;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: #42e8dc;
+}
+
+.card h3 {
+    color: #a4c5d2;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.value {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 18px 0 10px;
+    color: #42e8dc;
+}
+
+.unit {
+    font-size: 13px;
+    color: #9ab8c5;
+}
+
+.status {
+    font-size: 12px;
+    color: #4ce6a0;
+    margin-top: 10px;
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 18px;
+    margin-top: 25px;
+}
+
+.panel {
+    background: #102e41;
+    border: 1px solid #205064;
+    padding: 25px;
+    border-radius: 15px;
+    margin-top: 22px;
+}
+
+.score {
+    font-size: 55px;
+    color: #42e8dc;
+    margin: 22px 0 8px;
+    font-weight: bold;
+}
+
+.score-label {
+    color: #4ce6a0;
+    font-size: 14px;
+}
+
+.progress {
+    height: 9px;
+    background: #24485a;
+    border-radius: 20px;
+    margin-top: 22px;
+    overflow: hidden;
+}
+
+.bar {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #17b8a6, #58f0c2);
+    border-radius: 20px;
+    transition: 0.4s;
+}
+
+canvas {
+    width: 100%;
+    height: 190px;
+}
+
+.alert {
+    background: #102e41;
+    border: 1px solid #205064;
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 22px;
+}
+
+#alerts {
+    margin-top: 15px;
+    line-height: 2;
+    color: #a9c8d4;
+}
+
+input {
+    width: 100%;
+    padding: 13px;
+    margin-top: 9px;
+    background: #071b2b;
+    border: 1px solid #31576b;
+    border-radius: 8px;
+    color: white;
+    outline: none;
+    font-size: 14px;
+}
+
+input:focus {
+    border-color: #42e8dc;
+}
+
+label {
+    font-size: 13px;
+    color: #b8d8e3;
+}
+
+.analyzer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 17px;
+    margin-top: 22px;
+}
+
+button {
+    padding: 12px 19px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 5px 8px 5px 0;
+    background: #16bdb2;
+    color: #061b29;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #65f0dc;
+    transform: scale(1.03);
+}
+
+.danger {
+    background: #e45c66;
+    color: white;
+}
+
+.danger:hover {
+    background: #ff7b83;
+}
+
+.result {
+    margin-top: 20px;
+    padding: 18px;
+    background: #071b2b;
+    border-radius: 10px;
+    line-height: 2;
+}
+
+.good {
+    color: #4ce6a0;
+}
+
+.bad {
+    color: #ff6875;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    margin-top: 35px;
+    background: #0b2639;
+    color: #91b7c6;
+    font-size: 13px;
+    line-height: 2;
+}
+
+@media(max-width:700px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        font-size: 27px;
+    }
+
+    header {
+        padding: 18px 5%;
+    }
+
+    .container {
+        padding: 20px 5%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">Aqua<span>Watch</span></div>
+    <div class="live">SYSTEM ONLINE</div>
+</header>
+
+<section class="hero">
+    <h1>Every Drop Tells a Story.</h1>
+
+    <p>
+        Intelligent water quality monitoring for a cleaner,
+        safer and more sustainable tomorrow.
+    </p>
+
+    <div class="tag">SMART ENVIRONMENTAL MONITORING</div>
+</section>
+
+<div class="container">
+
+    <h2 class="section-title">Sensor Overview</h2>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>PH LEVEL</h3>
+            <div class="value" id="ph">7.2</div>
+            <div class="unit">pH units</div>
+            <div class="status" id="phStatus">Normal</div>
+        </div>
+
+        <div class="card">
+            <h3>DISSOLVED OXYGEN</h3>
+            <div class="value" id="do">7.5</div>
+            <div class="unit">mg/L</div>
+            <div class="status" id="doStatus">Normal</div>
+        </div>
+
+        <div class="card">
+            <h3>TURBIDITY</h3>
+            <div class="value" id="turb">3.1</div>
+            <div class="unit">NTU</div>
+            <div class="status" id="turbStatus">Normal</div>
+        </div>
+
+        <div class="card">
+            <h3>TEMPERATURE</h3>
+            <div class="value" id="temp">26</div>
+            <div class="unit">Degrees Celsius</div>
+            <div class="status" id="tempStatus">Normal</div>
+        </div>
+
+        <div class="card">
+            <h3>TOTAL DISSOLVED SOLIDS</h3>
+            <div class="value" id="tds">250</div>
+            <div class="unit">mg/L</div>
+            <div class="status" id="tdsStatus">Normal</div>
+        </div>
+
+    </div>
+
+    <div class="dashboard">
+
+        <div class="panel">
+            <h3>Water Quality Index</h3>
+
+            <div class="score" id="score">100</div>
+
+            <div class="score-label" id="overall">
+                EXCELLENT CONDITION
+            </div>
+
+            <div class="progress">
+                <div class="bar" id="progress"></div>
+            </div>
+
+            <p style="color:#9ab8c5; margin-top:18px; font-size:13px;">
+                Illustrative score based on monitored parameters.
+            </p>
+        </div>
+
+        <div class="panel">
+            <h3>Water Monitoring Trends</h3>
+
+            <p style="color:#9ab8c5; font-size:12px; margin:10px 0;">
+                Recent pH readings
+            </p>
+
+            <canvas id="chart"></canvas>
+        </div>
+
+    </div>
+
+    <div class="alert">
+        <h3>Pollution Detection and Alerts</h3>
+
+        <div id="alerts">
+            No abnormal readings detected.
+        </div>
+    </div>
+
+    <div class="panel">
+
+        <h2>Water Quality Analyzer</h2>
+
+        <p style="color:#9ab8c5; margin-top:12px;">
+            Enter water parameter readings to analyze their quality.
+        </p>
+
+        <div class="analyzer-grid">
+
+            <div>
+                <label>pH Level</label>
+                <input type="number" id="inputPH"
+                step="0.1" min="0" max="14"
+                placeholder="Enter pH value">
+            </div>
+
+            <div>
+                <label>Dissolved Oxygen (mg/L)</label>
+                <input type="number" id="inputDO"
+                step="0.1" min="0"
+                placeholder="Enter DO value">
+            </div>
+
+            <div>
+                <label>Turbidity (NTU)</label>
+                <input type="number" id="inputTurb"
+                step="0.1" min="0"
+                placeholder="Enter turbidity">
+            </div>
+
+            <div>
+                <label>Temperature (Celsius)</label>
+                <input type="number" id="inputTemp"
+                step="0.1"
+                placeholder="Enter temperature">
+            </div>
+
+            <div>
+                <label>TDS (mg/L)</label>
+                <input type="number" id="inputTDS"
+                step="0.1" min="0"
+                placeholder="Enter TDS value">
+            </div>
+
+        </div>
+
+        <button onclick="analyzeWater()" style="margin-top:22px;">
+            Analyze Water Quality
+        </button>
+
+        <div class="result" id="analysisResult">
+            Enter readings and click Analyze to see the results.
+        </div>
+
+    </div>
+
+    <div class="panel">
+
+        <h3>Monitoring Controls</h3>
+
+        <button onclick="refresh()">
+            Refresh Readings
+        </button>
+
+        <button class="danger" onclick="pollution()">
+            Simulate Pollution
+        </button>
+
+        <button onclick="reset()">
+            Reset System
+        </button>
+
+        <p style="color:#91b7c6; margin-top:15px; font-size:12px;"
+        id="time">
+            Last updated: --
+        </p>
+
+    </div>
+
+</div>
+
+<footer>
+    <div style="font-size:20px; color:#42e8dc;">
+        AquaWatch
+    </div>
+
+    Smart Water Quality Monitoring and Pollution Detection
+
+    <br>
+    Environmental Studies Project | 2026
+
+    <br>
+    Protect Water. Protect Life.
+</footer>
+
+<script>
+
+let values = {
+    ph: 7.2,
+    do: 7.5,
+    turb: 3.1,
+    temp: 26,
+    tds: 250
+};
+
+let history = [7.1, 7.2, 7.0, 7.3, 7.1, 7.2, 7.2];
+
+function drawChart() {
+
+    let canvas = document.getElementById("chart");
+    let ctx = canvas.getContext("2d");
+
+    let width = canvas.clientWidth;
+    let height = 190;
+
+    canvas.width = width * devicePixelRatio;
+    canvas.height = height * devicePixelRatio;
+
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+
+    ctx.clearRect(0, 0, width, height);
+
+    ctx.strokeStyle = "#31576b";
+    ctx.lineWidth = 1;
+
+    for(let i = 0; i <= 7; i++) {
+
+        let y = 10 + i * 23;
+
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+    }
+
+    let points = history.map((v, i) => ({
+        x: i * width / (history.length - 1),
+        y: height - 15 - (v / 14) * (height - 30)
+    }));
+
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+
+    points.forEach(p => ctx.lineTo(p.x, p.y));
+
+    ctx.strokeStyle = "#42e8dc";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    points.forEach(p => {
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+
+        ctx.fillStyle = "#42e8dc";
+        ctx.fill();
+    });
+}
+
+function update() {
+
+    let checks = [
+        ["phStatus", values.ph < 6.5 || values.ph > 8.5, "Abnormal pH level"],
+        ["doStatus", values.do < 5, "Low dissolved oxygen"],
+        ["turbStatus", values.turb > 5, "High turbidity"],
+        ["tempStatus", values.temp > 35, "High temperature"],
+        ["tdsStatus", values.tds > 500, "High TDS"]
+    ];
+
+    let alerts = [];
+
+    document.getElementById("ph").innerText = values.ph;
+    document.getElementById("do").innerText = values.do;
+    document.getElementById("turb").innerText = values.turb;
+    document.getElementById("temp").innerText = values.temp;
+    document.getElementById("tds").innerText = values.tds;
+
+    checks.forEach(c => {
+
+        let element = document.getElementById(c[0]);
+
+        if(c[1]) {
+
+            element.innerText = "Abnormal";
+            element.style.color = "#ff6875";
+
+            alerts.push(c[2]);
+
+        } else {
+
+            element.innerText = "Normal";
+            element.style.color = "#4ce6a0";
+        }
+    });
+
+    let score = Math.max(0, 100 - alerts.length * 20);
+
+    document.getElementById("score").innerText = score;
+
+    document.getElementById("progress").style.width =
+        score + "%";
+
+    let overall = document.getElementById("overall");
+
+    if(alerts.length > 0) {
+
+        overall.innerText = "POLLUTION WARNING";
+        overall.style.color = "#ff6875";
+
+        document.getElementById("alerts").innerText =
+            alerts.join(" | ");
+
+    } else {
+
+        overall.innerText = "EXCELLENT CONDITION";
+        overall.style.color = "#4ce6a0";
+
+        document.getElementById("alerts").innerText =
+            "No abnormal readings detected.";
+    }
+
+    document.getElementById("time").innerText =
+        "Last updated: " + new Date().toLocaleTimeString();
+
+    history.push(values.ph);
+
+    if(history.length > 10) {
+        history.shift();
+    }
+
+    drawChart();
+}
+
+function refresh() {
+
+    values.ph = +(6.8 + Math.random() * 1.2).toFixed(1);
+    values.do = +(6 + Math.random() * 3).toFixed(1);
+    values.turb = +(1 + Math.random() * 4).toFixed(1);
+    values.temp = Math.floor(23 + Math.random() * 8);
+    values.tds = Math.floor(150 + Math.random() * 300);
+
+    update();
+}
+
+function pollution() {
+
+    values.ph = 5.2;
+    values.do = 2.1;
+    values.turb = 18.5;
+    values.temp = 39;
+    values.tds = 850;
+
+    update();
+}
+
+function reset() {
+
+    values = {
+        ph: 7.2,
+        do: 7.5,
+        turb: 3.1,
+        temp: 26,
+        tds: 250
+    };
+
+    history = [7.1, 7.2, 7.0, 7.3, 7.1, 7.2, 7.2];
+
+    update();
+}
+
+function analyzeWater() {
+
+    let readings = [
+        {
+            name: "pH",
+            id: "inputPH",
+            min: 6.5,
+            max: 8.5
+        },
+        {
+            name: "Dissolved Oxygen",
+            id: "inputDO",
+            min: 5,
+            max: Infinity
+        },
+        {
+            name: "Turbidity",
+            id: "inputTurb",
+            min: 0,
+            max: 5
+        },
+        {
+            name: "Temperature",
+            id: "inputTemp",
+            min: 0,
+            max: 35
+        },
+        {
+            name: "TDS",
+            id: "inputTDS",
+            min: 0,
+            max: 500
+        }
+    ];
+
+    let result = "";
+    let count = 0;
+    let invalid = false;
+
+    readings.forEach(item => {
+
+        let input = document.getElementById(item.id).value;
+
+        if(input.trim() === "") return;
+
+        let number = Number(input);
+
+        if(!Number.isFinite(number) ||
+           number < 0 ||
+           (item.name === "pH" && number > 14)) {
+
+            result += "<div class='bad'>" +
+                item.name + ": Invalid reading</div>";
+
+            invalid = true;
+            return;
+        }
+
+        count++;
+
+        if(number >= item.min && number <= item.max) {
+
+            result += "<div class='good'>" +
+                item.name + ": Normal (" + number + ")</div>";
+
+        } else {
+
+            result += "<div class='bad'>" +
+                item.name + ": Abnormal (" + number + ")</div>";
+        }
+    });
+
+    if(count === 0 && !invalid) {
+
+        result = "Please enter at least one reading.";
+
+    } else if(count === 0) {
+
+        result = "Please enter a valid reading.";
+
+    }
+
+    document.getElementById("analysisResult").innerHTML =
+        result;
+}
+
+window.addEventListener("resize", drawChart);
+
+update();
+
+</script>
+
+</body>
+</html>
